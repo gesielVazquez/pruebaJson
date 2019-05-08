@@ -6,22 +6,23 @@
 
           if (isset($_FILES['archivo'])){
 
-          $nombreArchivo = $directorio.$_FILES['archivo']['name'];
-          $nombreTmpArchivo = $_FILES['archivo']['tmp_name'];
-          $ext = substr($nombreArchivo, strrpos($nombreArchivo, '.'));
+            $nombreArchivo = $directorio."prueba.json";
 
-            if ($ext == '.json'){
+            $nombreTmpArchivo = $_FILES['archivo']['tmp_name'];
+            $ext = substr($nombreArchivo, strrpos($nombreArchivo, '.'));
 
-              if(move_uploaded_file($nombreTmpArchivo, $nombreArchivo)){
+              if ($ext == '.json'){
 
-                header ("Location: json/procesar.php");
-              }
-              else{
-                echo"Ocurrio un Error!!"
-              }
+                if(move_uploaded_file($nombreTmpArchivo, $nombreArchivo)){
+
+                  header ("Location: json/procesar.php");
+                }
+                  else{
+                    echo"Ocurrio un Error!!";
+                  }
             }
-            else{
-              echo "Solo se admiten archivos .json Favor de verificar el archivo.";
+              else{
+                echo "Solo se admiten archivos .json Favor de verificar el archivo.";
             }
 
           }

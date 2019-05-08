@@ -9,27 +9,44 @@ $total_goles_nivel = 0;
 
 $niveles = array('A' => 5, 'B' => 10, 'C' => 15, 'Cuauh' => 20);
   foreach ($json_to_array as $jugador) {
-    echo "</br></br> Jugador: ";
-    print_r($jugador);
       if (!empty($jugador['sueldo'])){
         $total_goles_equipo += $jugador['goles'];
         $total_goles_nivel += $niveles[$jugador['nivel']];
       }
   }
 
-  echo ("</br></br> Los Goles totales del equipo son : $total_goles_equipo");
-  echo ("</br></br> El nivel goles necesario por equipo es de : $total_goles_nivel goles en total");
-
 $porcen_bono_grupal = 0;
 
   if ($total_goles_equipo >= $total_goles_nivel){
     $porcen_bono_grupal = 100;
   }
-  else {
-    $porcen_bono_grupal = ($total_goles_equipo / $total_goles_nivel)*100;
-  }
+    else {
+      $porcen_bono_grupal = ($total_goles_equipo / $total_goles_nivel)*100;
+    }
 
-  echo ("</br></br> El porcentaje de bono por equipo es : $porcen_bono_grupal");
+$json_final = array();
+  foreach ($json_to_array as $jugador) {
+
+    if (!empty($jugador['sueldo'])){
+
+      if ($jugador['goles'] >= $niveles[$jugador['nivel']]){
+        $porcen_bono_Ind = 100;
+      }
+        else {
+          $porcen_bono_Ind = ($jugador['goles']/$niveles[$jugador['nivel']])*100;
+        }
+
+        $porcen_total = ($porcen_bono_grupal + $porcen_bono_Ind)/2;
+        $bono_real = ($jugador['bono'] * $porcen_total)/100;
+        $sueldo_completo = $jugador['sueldo'] + $bono_real;
+        $jugador['sueldo_completo'] = $sueldo_completo;
+        array_push($json_final,$jugador);
+  }
+}
+
+$fp = fopen('res_prueba.json', 'w');
+fwrite($fp, json_encode($json_final));
+fclose($fp);
 
 $file = "prueba.json";
 if (!unlink($file))
@@ -38,7 +55,7 @@ if (!unlink($file))
   }
 else
   {
-  echo ("</br></br> Archivo $file borrado satisfactoriamente.");
+
   }
 
  ?>
